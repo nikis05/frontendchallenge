@@ -8,7 +8,7 @@ describe('DropDownMenu', () => {
 
   it('renders closed', () => {
     const { container } = render(
-      <DropDownMenu label="Label" isOpen={false} options={[]} />
+      <DropDownMenu label='Label' isOpen={false} options={[]} />,
     );
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -16,13 +16,13 @@ describe('DropDownMenu', () => {
   it('renders open with options', () => {
     const { container } = render(
       <DropDownMenu
-        label="Label"
-        isOpen={true}
+        label='Label'
+        isOpen
         options={[
           { key: 'duplicate', label: 'Duplicate' },
-          { key: 'delete', label: 'Delete', danger: true }
+          { key: 'delete', label: 'Delete', danger: true },
         ]}
-      />
+      />,
     );
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -30,36 +30,36 @@ describe('DropDownMenu', () => {
   it('renders selected items', () => {
     const { container } = render(
       <DropDownMenu
-        label="Label"
+        label='Label'
         options={[
           { key: 'one', label: 'One' },
           { key: 'two', label: 'Two' },
-          { key: 'three', label: 'Three' }
+          { key: 'three', label: 'Three' },
         ]}
-        isOpen={true}
+        isOpen
         selectedKeys={['one', 'three']}
-      />
+      />,
     );
     expect(container.firstChild).toMatchSnapshot();
   });
 
-  it('invokes onOpen(true) if handle is clicked', () => {
+  it('invokes onOpen(true) if selection is clicked', () => {
     const onOpen = jest.fn();
     const { container } = render(
-      <DropDownMenu label="Label" isOpen={false} onOpen={onOpen} options={[]} />
+      <DropDownMenu label='Label' isOpen={false} onOpen={onOpen} options={[]} />,
     );
-    const handleElem = container.getElementsByClassName('handle')[0];
-    fireEvent.click(handleElem);
+    const selectionElement = container.getElementsByClassName('selection')[0];
+    fireEvent.click(selectionElement);
     expect(onOpen).toBeCalledWith(true);
   });
 
-  it('invokes onOpen(false) if handle is clicked and is currently open', () => {
+  it('invokes onOpen(false) if selection is clicked and is currently open', () => {
     const onOpen = jest.fn();
     const { container } = render(
-      <DropDownMenu label="Label" isOpen onOpen={onOpen} options={[]} />
+      <DropDownMenu label='Label' isOpen onOpen={onOpen} options={[]} />,
     );
-    const handleElem = container.getElementsByClassName('handle')[0];
-    fireEvent.click(handleElem);
+    const selectionElement = container.getElementsByClassName('selection')[0];
+    fireEvent.click(selectionElement);
     expect(onOpen).toBeCalledWith(false);
   });
 
@@ -67,14 +67,14 @@ describe('DropDownMenu', () => {
     const onOpen = jest.fn();
     const { container } = render(
       <DropDownMenu
-        label="Label"
+        label='Label'
         isOpen
         onOpen={onOpen}
         options={[{ key: 'one', label: 'One' }]}
-      />
+      />,
     );
-    const optionElem = container.getElementsByClassName('option')[0];
-    fireEvent.click(optionElem);
+    const optionElement = container.getElementsByClassName('option')[0];
+    fireEvent.click(optionElement);
     expect(onOpen).toBeCalledWith(false);
   });
 
@@ -82,15 +82,15 @@ describe('DropDownMenu', () => {
     const onOpen = jest.fn();
     const { container } = render(
       <DropDownMenu
-        label="Label"
+        label='Label'
         isOpen
         onOpen={onOpen}
         options={[{ key: 'one', label: 'One' }]}
         noCloseOnSelect
-      />
+      />,
     );
-    const optionElem = container.getElementsByClassName('option')[0];
-    fireEvent.click(optionElem);
+    const optionElement = container.getElementsByClassName('option')[0];
+    fireEvent.click(optionElement);
     expect(onOpen).not.toBeCalled();
   });
 });

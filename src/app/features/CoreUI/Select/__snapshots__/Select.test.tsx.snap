@@ -5,7 +5,7 @@ exports[`Select supports multi select 1`] = `
   class="container"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label
@@ -151,7 +151,7 @@ exports[`Select supports option deselect 1`] = `
   class="container"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label
@@ -297,7 +297,7 @@ exports[`Select supports single select 1`] = `
   class="container"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label

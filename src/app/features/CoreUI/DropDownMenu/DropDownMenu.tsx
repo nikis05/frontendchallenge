@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import styles from './DropDownMenu.module.scss';
 import Label from '../Label/Label';
 import ArrowIcon from '../Icons/ArrowIcon';
-import { useFocusable } from '../../../../utils/hooks/useFocusable';
+import useFocusable from '../../../../utils/hooks/useFocusable';
 import Option, { MenuOption } from './Option/Option';
 
 interface Props {
@@ -52,9 +52,8 @@ const DropDownMenu: FC<Props> = ({
   onOpen,
   onSelect,
   selectedKeys,
-  noCloseOnSelect
+  noCloseOnSelect,
 }) => {
-  const handleRef = useRef<HTMLDivElement>(null);
   // Current position of focus in the element. 0 = focus on handle, 1+ = focus
   // on respective option
   const [focusIndex, setFocusIndex] = useState(0);
@@ -62,8 +61,11 @@ const DropDownMenu: FC<Props> = ({
   // Change focus when arrows used to navigate up/down the menu
   const handleArrowNavigation = (up: boolean) => {
     let targetIndex: number;
+    // Enable circular navigation, e.g. if keyup is pressed wjile topmost
+    // component is focused, focus is moved to bottom
     if (focusIndex === options.length && !up) targetIndex = 0;
     else if (focusIndex === 0 && up) targetIndex = options.length;
+    // Basic up/down navigation
     else targetIndex = focusIndex + (up ? -1 : 1);
     setFocusIndex(targetIndex);
   };
@@ -72,12 +74,14 @@ const DropDownMenu: FC<Props> = ({
     if (onOpen) onOpen(!isOpen);
   };
 
-  useFocusable(handleRef, {
+  const selectionReference = useRef<HTMLDivElement>(null);
+
+  useFocusable(selectionReference, {
     onTriggered: handleOpen,
     onArrowNavigation: handleArrowNavigation,
     // Focus should be forced on handle if no option has focus and if menu is
     // open
-    forceFocus: focusIndex === 0 && isOpen
+    forceFocus: focusIndex === 0 && isOpen,
   });
 
   // On close focus position is reset. Not doing it on open to prevent glitches
@@ -85,39 +89,43 @@ const DropDownMenu: FC<Props> = ({
     if (!isOpen) setFocusIndex(0);
   }, [isOpen]);
 
+  const optionNodes = options.map((option, index) => {
+    // Whether or not option should take focus
+    const focusIsOnOption = focusIndex === index + 1;
+
+    // Invoked when option is selected
+    const handleSelect = () => {
+      if (onSelect) onSelect(option.key);
+      // Move focus to selected option
+      setFocusIndex(index + 1);
+      // Auto close on select
+      if (!noCloseOnSelect && onOpen) onOpen(false);
+    };
+
+    // Whether or not to render checkbox and is it checked
+    const isSelected = selectedKeys === undefined
+      ? undefined
+      : selectedKeys.includes(option.key);
+
+    return (
+      <Option
+        key={option.key}
+        option={option}
+        forceFocus={focusIsOnOption}
+        onArrowNavigation={handleArrowNavigation}
+        onSelect={handleSelect}
+        isSelected={isSelected}
+      />
+    );
+  });
+
   return (
     <div className={classNames(styles.container, { [styles.isOpen]: isOpen })}>
-      <div
-        className={styles.handle}
-        onClick={handleOpen}
-        tabIndex={0}
-        ref={handleRef}
-      >
-        <Label title={label} position="inline" />
+      <div className={styles.selection} ref={selectionReference}>
+        <Label title={label} position='inline' />
         <ArrowIcon className={styles.arrow} />
       </div>
-      <div className={styles.wrapper}>
-        {options.map((option, index) => (
-          <Option
-            key={option.key}
-            option={option}
-            forceFocus={focusIndex === index + 1}
-            onArrowNavigation={handleArrowNavigation}
-            onSelect={() => {
-              onSelect && onSelect(option.key);
-              // Move focus to selected option
-              setFocusIndex(index + 1);
-              // Auto close on select
-              !noCloseOnSelect && onOpen && onOpen(false);
-            }}
-            isSelected={
-              selectedKeys === undefined
-                ? undefined
-                : selectedKeys.includes(option.key)
-            }
-          />
-        ))}
-      </div>
+      <div className={styles.wrapper}>{optionNodes}</div>
     </div>
   );
 };

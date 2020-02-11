@@ -6,15 +6,15 @@ import '../../App/Root/Root.scss';
 
 export default {
   component: DropDownMenu,
-  title: 'DropDownMenu'
+  title: 'DropDownMenu',
 };
 
 export const normal = () => (
   <DropDownMenu
-    label="Label"
+    label='Label'
     options={[
       { key: 'duplicate', label: 'Duplicate' },
-      { key: 'delete', label: 'Delete', danger: true }
+      { key: 'delete', label: 'Delete', danger: true },
     ]}
     isOpen={false}
     onOpen={action('open')}
@@ -23,12 +23,12 @@ export const normal = () => (
 
 export const active = () => (
   <DropDownMenu
-    label="Label"
+    label='Label'
     options={[
       { key: 'duplicate', label: 'Duplicate' },
-      { key: 'delete', label: 'Delete', danger: true }
+      { key: 'delete', label: 'Delete', danger: true },
     ]}
-    isOpen={true}
+    isOpen
     onOpen={action('open')}
     onSelect={action('select')}
   />
@@ -36,13 +36,13 @@ export const active = () => (
 
 export const multiple = () => (
   <DropDownMenu
-    label="Label"
+    label='Label'
     options={[
       { key: 'one', label: 'One' },
       { key: 'two', label: 'Two' },
-      { key: 'three', label: 'Three' }
+      { key: 'three', label: 'Three' },
     ]}
-    isOpen={true}
+    isOpen
     selectedKeys={['one', 'three']}
     onSelect={action('select')}
   />
@@ -54,19 +54,23 @@ const Controller: FC = () => {
   return (
     <div style={{ display: 'flex' }}>
       <DropDownMenu
-        label="Label"
+        label='Label'
         options={[
           { key: 'duplicate', label: 'Duplicate' },
-          { key: 'delete', label: 'Delete', danger: true }
+          { key: 'delete', label: 'Delete', danger: true },
         ]}
         isOpen={isOpen}
         onOpen={setOpen}
         onSelect={setLastOption}
       />
       <div style={{ marginLeft: '16px' }}>
-        isOpen: {JSON.stringify(isOpen)}
+        isOpen:
+        {' '}
+        {JSON.stringify(isOpen)}
         <br />
-        Last selected option: {JSON.stringify(lastOption)}
+        Last selected option:
+        {' '}
+        {JSON.stringify(lastOption)}
       </div>
     </div>
   );

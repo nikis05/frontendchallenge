@@ -31,20 +31,20 @@ interface Props {
 
 const Checkbox = forwardRef<HTMLInputElement, Props>(
   ({ label, checked, onChange, disabled }, ref) => {
-    const labelRef = useRef<HTMLDivElement>(null);
+    const labelReference = useRef<HTMLDivElement>(null);
     // Used for internal logic (tracking focus)
-    const internalCheckboxRef = useRef<HTMLInputElement>(null);
+    const internalCheckboxReference = useRef<HTMLInputElement>(null);
     // Actual input receives combined ref of internal ref and external one to
     // use with react-hook-form
-    const checkboxRef = useCombinedRefs(ref, internalCheckboxRef);
-    const hasHover = useHover(labelRef);
-    const hasFocus = useFocus(internalCheckboxRef);
+    const checkboxReference = useCombinedRefs(ref, internalCheckboxReference);
+    const hasHover = useHover(labelReference);
+    const hasFocus = useFocus(internalCheckboxReference);
 
     return (
-      <div ref={labelRef} className={styles.container}>
+      <div ref={labelReference} className={styles.container}>
         <Label
           title={label}
-          position="right"
+          position='right'
           disabled={disabled}
           preventBubbling
         >
@@ -53,19 +53,19 @@ const Checkbox = forwardRef<HTMLInputElement, Props>(
             isActive={checked}
           />
           <input
-            type="checkbox"
+            type='checkbox'
             className={styles.input}
             checked={checked}
-            onChange={e => {
-              if (onChange) onChange(e.target.checked);
+            onChange={(event) => {
+              if (onChange) onChange(event.target.checked);
             }}
-            ref={checkboxRef}
+            ref={checkboxReference}
             disabled={disabled}
           />
         </Label>
       </div>
     );
-  }
+  },
 );
 
 export default Checkbox;

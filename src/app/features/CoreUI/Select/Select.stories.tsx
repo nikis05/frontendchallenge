@@ -6,7 +6,7 @@ import '../../App/Root/Root.scss';
 
 export default {
   component: Select,
-  title: 'Select'
+  title: 'Select',
 };
 
 export const normal = () => (
@@ -14,9 +14,9 @@ export const normal = () => (
     options={[
       { key: '1', label: 'One' },
       { key: '2', label: 'Two' },
-      { key: '3', label: 'Three' }
+      { key: '3', label: 'Three' },
     ]}
-    value={'1'}
+    value='1'
     onChange={action('change')}
   />
 );
@@ -26,32 +26,30 @@ export const multiple = () => (
     options={[
       { key: '1', label: 'One' },
       { key: '2', label: 'Two' },
-      { key: '3', label: 'Three' }
+      { key: '3', label: 'Three' },
     ]}
     value={['1', '2']}
     onChange={action('change')}
   />
 );
 
-const Controller: React.FC<{ multiple: boolean }> = ({ multiple }) => {
+const Controller: React.FC<{ multipleMode: boolean }> = ({ multipleMode }) => {
   const [state, setState] = useState<string | string[] | null>(
-    multiple ? [] : null
+    multipleMode ? [] : null,
   );
   return (
     <Select
       options={[
         { key: '1', label: 'One' },
         { key: '2', label: 'Two' },
-        { key: '3', label: 'Three' }
+        { key: '3', label: 'Three' },
       ]}
       value={state}
-      onChange={newS => {
-        setState(newS);
-      }}
+      onChange={setState}
     />
   );
 };
 
-export const controlledSingle = () => <Controller multiple={false} />;
+export const controlledSingle = () => <Controller multipleMode={false} />;
 
-export const controlledMultiple = () => <Controller multiple />;
+export const controlledMultiple = () => <Controller multipleMode />;

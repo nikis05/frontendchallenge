@@ -25,38 +25,53 @@ interface Props {
   onChange: (value: string | null | string[]) => void;
 }
 
+// Returns current value of select as display string. For empty value falls back
+// to placeholder if provided. Otherwise returns default placeholder.
+const getMenuLabel = (
+  options: MenuOption[],
+  value: string | null | string[],
+  customPlaceholder: string | undefined,
+) => {
+  const getOptionDisplayName = (key: string) => options.find((option) => option.key === key)!.label;
+  const placeholder = customPlaceholder || 'Select an option';
+  if (Array.isArray(value)) {
+    if (value.length === 0) return placeholder;
+    return value.map(getOptionDisplayName).join(', ');
+  }
+  if (value === null) return placeholder;
+  return getOptionDisplayName(value);
+};
+
+const removeFromArray = (array: string[], key: string) => array.filter((existingKey) => existingKey !== key);
+
+const addToArray = (array: string[], key: string) => [...array, key];
+
 const Select: FC<Props> = ({ options, placeholder, value, onChange }) => {
   const [isOpen, setOpen] = useState(false);
+  const isMultipleMode = Array.isArray(value);
 
-  let displayValue: string | null;
-  let handleSelect: (key: string) => void;
-  const getOptionDisplayName = (key: string) =>
-    options.find(option => option.key === key)!.label;
-  let isMultipleMode: boolean;
-  if (Array.isArray(value)) {
-    isMultipleMode = true;
-    displayValue =
-      value.length === 0 ? null : value.map(getOptionDisplayName).join(', ');
-    handleSelect = key => {
-      if (value.includes(key))
-        onChange(value.filter(existingKey => existingKey !== key));
-      else onChange([...value, key]);
-    };
-  } else {
-    isMultipleMode = false;
-    displayValue = value === null ? null : getOptionDisplayName(value);
-    handleSelect = onChange;
-  }
+  const handleSelect = (key: string) => {
+    // In multiple mode, calls onChange with updated array of selected keys
+    if (isMultipleMode) {
+      // Typescript type assertion
+      const valueAsArray = value as string[];
+      // If key is currently present in array, remove it from array
+      if (valueAsArray.includes(key)) onChange(removeFromArray(valueAsArray, key));
+      // Otherwise add it to array
+      else onChange(addToArray(valueAsArray, key));
+    } else onChange(key);
+  };
 
-  const label = displayValue || placeholder || 'Select an option';
+  const menuLabel = getMenuLabel(options, value, placeholder);
+  const selectedKeys = Array.isArray(value) ? value : undefined;
 
   return (
     <DropDownMenu
-      label={label}
+      label={menuLabel}
       options={options}
       isOpen={isOpen}
       onOpen={setOpen}
-      selectedKeys={Array.isArray(value) ? value : undefined}
+      selectedKeys={selectedKeys}
       onSelect={handleSelect}
       noCloseOnSelect={isMultipleMode}
     />

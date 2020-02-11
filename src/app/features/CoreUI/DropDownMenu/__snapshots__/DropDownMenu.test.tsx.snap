@@ -5,7 +5,7 @@ exports[`DropDownMenu renders closed 1`] = `
   class="container"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label
@@ -43,7 +43,7 @@ exports[`DropDownMenu renders open with options 1`] = `
   class="container isOpen"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label
@@ -93,7 +93,7 @@ exports[`DropDownMenu renders open with options 1`] = `
       tabindex="0"
     >
       <label
-        class="container label_danger inline"
+        class="container labelDanger inline"
         role="presentation"
       >
         <div
@@ -112,7 +112,7 @@ exports[`DropDownMenu renders selected items 1`] = `
   class="container isOpen"
 >
   <div
-    class="handle"
+    class="selection"
     tabindex="0"
   >
     <label

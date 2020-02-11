@@ -53,14 +53,14 @@ const Label: FC<Props> = forwardRef((props, ref) => {
     disabled,
     tabIndex,
     onKeyPress,
-    className
+    className,
   } = props;
 
   const text = (
     <div
       className={styles.label}
-      onClick={e => {
-        if (props.preventBubbling) e.stopPropagation();
+      onClick={(event) => {
+        if (props.preventBubbling) event.stopPropagation();
       }}
     >
       {title}
@@ -69,7 +69,7 @@ const Label: FC<Props> = forwardRef((props, ref) => {
   const classes = classNames(styles.container, className, {
     [styles.right]: position === 'right',
     [styles.inline]: position === 'inline',
-    [styles.disabled]: disabled
+    [styles.disabled]: disabled,
   });
 
   return (
@@ -78,7 +78,7 @@ const Label: FC<Props> = forwardRef((props, ref) => {
       ref={ref}
       tabIndex={tabIndex}
       onKeyPress={onKeyPress}
-      role="presentation"
+      role='presentation'
     >
       {text}
       {children}

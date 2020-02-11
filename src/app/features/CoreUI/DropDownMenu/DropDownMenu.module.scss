@@ -4,7 +4,7 @@
   position: relative;
   width: 200px;
 
-  .handle {
+  .selection {
     background-color: $gray-100;
     justify-content: space-between;
     border-radius: 4px;
@@ -24,7 +24,7 @@
   }
 
   &.isOpen {
-    .handle {
+    .selection {
       .arrow {
         transform: rotate(180deg);
       }
@@ -34,7 +34,7 @@
     }
   }
 
-  .handle,
+  .selection,
   .option {
     display: flex;
     align-items: center;

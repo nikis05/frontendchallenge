@@ -9,18 +9,19 @@ const useHover = <T extends Element | any>(ref: RefObject<T>): boolean => {
   const handleMouseOut = () => setValue(false);
 
   useEffect(// eslint-disable-next-line consistent-return
-  () => {
-    const node = ref.current;
-    if (node) {
-      node.addEventListener('mouseover', handleMouseOver);
-      node.addEventListener('mouseout', handleMouseOut);
+    () => {
+      const node = ref.current;
+      if (node) {
+        node.addEventListener('mouseover', handleMouseOver);
+        node.addEventListener('mouseout', handleMouseOut);
 
-      return () => {
-        node.removeEventListener('mouseover', handleMouseOver);
-        node.removeEventListener('mouseout', handleMouseOut);
-      };
-    }
-  }, [ref]);
+        return () => {
+          node.removeEventListener('mouseover', handleMouseOver);
+          node.removeEventListener('mouseout', handleMouseOut);
+        };
+      }
+    }, [ref],
+  );
 
   return value;
 };

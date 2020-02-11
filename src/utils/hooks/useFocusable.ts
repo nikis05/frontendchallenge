@@ -1,33 +1,36 @@
 import { RefObject, useEffect } from 'react';
 
-export const useFocusable = (
-  ref: RefObject<any>,
+const useFocusable = (
+  ref: RefObject<HTMLElement>,
   {
     onTriggered,
     onArrowNavigation,
-    forceFocus
+    forceFocus,
   }: {
     onTriggered: () => void;
     onArrowNavigation: (up: boolean) => void;
     forceFocus: boolean;
-  }
+  },
 ) => {
   useEffect(() => {
     const node = ref.current;
     if (node) {
       node.tabIndex = 0;
-      const handler = (e: KeyboardEvent) => {
-        if (e.keyCode === 32 || e.keyCode === 13) onTriggered();
-        console.log(e.keyCode);
-        if (e.keyCode === 38) onArrowNavigation(true);
-        if (e.keyCode === 40) onArrowNavigation(false);
+      const keydownHandler = (event: KeyboardEvent) => {
+        if (event.keyCode === 32 || event.keyCode === 13) onTriggered();
+        if (event.keyCode === 38) onArrowNavigation(true);
+        if (event.keyCode === 40) onArrowNavigation(false);
       };
-      node.addEventListener('keydown', handler);
+      node.addEventListener('keydown', keydownHandler);
+      node.addEventListener('click', onTriggered);
       if (forceFocus) node.focus();
       return () => {
-        node.tabIndex = undefined;
-        node.removeEventListener('keydown', handler);
+        node.removeEventListener('keydown', keydownHandler);
+        node.removeEventListener('click', onTriggered);
       };
     }
+    return undefined;
   }, [ref, onTriggered]);
 };
+
+export default useFocusable;

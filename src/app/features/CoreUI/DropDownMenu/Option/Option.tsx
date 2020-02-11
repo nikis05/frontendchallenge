@@ -1,7 +1,8 @@
 import React, { FC, useRef } from 'react';
-import { useFocusable } from '../../../../../utils/hooks/useFocusable';
-import Label from '../../Label/Label';
 import classNames from 'classnames';
+
+import useFocusable from '../../../../../utils/hooks/useFocusable';
+import Label from '../../Label/Label';
 import styles from '../DropDownMenu.module.scss';
 import Checkbox from '../../Checkbox/Checkbox';
 
@@ -35,20 +36,23 @@ const Option: FC<Props> = ({
   forceFocus,
   onArrowNavigation,
   onSelect,
-  isSelected
+  isSelected,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   useFocusable(ref, { onTriggered: onSelect, forceFocus, onArrowNavigation });
+
+  // If isSelected is boolean, renders a checkbox, otherwise just label
+  const renderAsCheckbox = isSelected !== undefined;
   return (
-    <div ref={ref} className={styles.option} onClick={onSelect}>
-      {isSelected === undefined ? (
+    <div ref={ref} className={styles.option}>
+      {renderAsCheckbox ? (
+        <Checkbox label={option.label} checked={isSelected as boolean} />
+      ) : (
         <Label
           title={option.label}
-          position="inline"
-          className={classNames({ [styles.label_danger]: option.danger })}
+          position='inline'
+          className={classNames({ [styles.labelDanger]: option.danger })}
         />
-      ) : (
-        <Checkbox label={option.label} checked={isSelected} />
       )}
     </div>
   );
